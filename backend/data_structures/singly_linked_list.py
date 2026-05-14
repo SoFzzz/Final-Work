@@ -1,35 +1,47 @@
 # backend/data_structures/singly_linked_list.py
-# Implementación de lista enlazada simple usando nodos con un solo puntero hacia adelante.
+# Singly linked list implementation using nodes with a single forward pointer.
 #
-# Estructura: Cadena de nodos; cada nodo contiene datos y una referencia al siguiente nodo.
-# Usado para: Registro dinámico de clientes.
-# Comportamiento: Los nodos se asignan bajo demanda; el recorrido es unidireccional (de cabeza a cola).
+# Structure: Chain of nodes; each node contains data and a reference to the next node.
+# Used for: Dynamic customer registration.
+# Behavior: Nodes are allocated on demand; traversal is unidirectional (from head to tail).
+
 
 class Node:
-    """Nodo para la lista enlazada simple."""
+    """Node for the singly linked list."""
     def __init__(self, data):
-        # Almacena los datos del nodo
+        # Stores the node data
         self.data = data
-        # Puntero al siguiente nodo, inicialmente nulo
+        # Pointer to the next node, initially null
         self.next = None
 
+    def __str__(self):
+        return f"Node({self.data})"
+
+    def __repr__(self):
+        return f"Node(data={self.data!r})"
+
+
 class SinglyLinkedList:
-    """Implementación de la lista enlazada simple."""
+    """Implementation of the singly linked list."""
     def __init__(self):
-        # Puntero a la cabeza de la lista
+        # Pointer to the head of the list
         self.head = None
-        # Contador del tamaño de la lista
+        # Internal size counter
         self._size = 0
 
     def add_to_head(self, data):
-        """Inserta un nuevo nodo al inicio de la lista."""
+        """Inserts a new node at the beginning of the list."""
+        if data is None:
+            raise ValueError("Cannot add None data to the list")
         new_node = Node(data)
         new_node.next = self.head
         self.head = new_node
         self._size += 1
 
     def add_to_tail(self, data):
-        """Inserta un nuevo nodo al final de la lista."""
+        """Inserts a new node at the end of the list."""
+        if data is None:
+            raise ValueError("Cannot add None data to the list")
         new_node = Node(data)
         if self.head is None:
             self.head = new_node
@@ -41,28 +53,28 @@ class SinglyLinkedList:
         self._size += 1
 
     def remove(self, data):
-        """Encuentra y elimina el nodo que contiene los datos dados."""
+        """Finds and removes the first node containing the given data."""
         current = self.head
         previous = None
 
         while current is not None:
             if current.data == data:
                 if previous is None:
-                    # El nodo a eliminar es la cabeza
+                    # The node to remove is the head
                     self.head = current.next
                 else:
-                    # El nodo a eliminar está en el medio o al final
+                    # The node to remove is in the middle or at the end
                     previous.next = current.next
                 self._size -= 1
                 return True
             previous = current
             current = current.next
         
-        # El nodo no se encontró
+        # The node was not found
         return False
 
     def search(self, data):
-        """Retorna el nodo que contiene los datos dados, o None si no existe."""
+        """Returns the node containing the given data, or None if not found."""
         current = self.head
         while current is not None:
             if current.data == data:
@@ -71,18 +83,76 @@ class SinglyLinkedList:
         return None
 
     def traverse(self):
-        """Itera e imprime todos los nodos desde la cabeza hasta la cola."""
+        """Iterates and prints all nodes from head to tail."""
         current = self.head
         elements = []
         while current is not None:
             elements.append(str(current.data))
             current = current.next
-        print(" -> ".join(elements) if elements else "Lista vacía")
+        print(" -> ".join(elements) if elements else "Empty list")
 
     def is_empty(self):
-        """Retorna True si la lista no tiene nodos."""
+        """Returns True if the list has no nodes."""
         return self.head is None
 
     def size(self):
-        """Retorna el número de nodos en la lista."""
+        """Returns the total number of nodes in the list."""
         return self._size
+
+    def __str__(self):
+        elements = []
+        current = self.head
+        while current is not None:
+            elements.append(repr(current.data))
+            current = current.next
+        return f"SinglyLinkedList([{', '.join(elements)}])"
+
+    def __repr__(self):
+        return f"SinglyLinkedList(size={self._size}, head={self.head})"
+
+
+if __name__ == "__main__":
+    # Usage example: Customer Registration
+    print("=" * 60)
+    print("SINGLY LINKED LIST - CUSTOMER REGISTRATION EXAMPLE")
+    print("=" * 60)
+
+    registry = SinglyLinkedList()
+
+    customers = [
+        "Customer #1 - Alice",
+        "Customer #2 - Bob",
+        "Customer #3 - Charlie"
+    ]
+
+    print("\n1. Adding customers to the tail of the registry:")
+    for customer in customers:
+        registry.add_to_tail(customer)
+        print(f"   [OK] Added to tail: {customer}")
+
+    print("\n2. Adding a customer to the head:")
+    head_customer = "Customer #0 - Admin"
+    registry.add_to_head(head_customer)
+    print(f"   [OK] Added to head: {head_customer}")
+
+    print(f"\n3. Total registered customers: {registry.size()}")
+    print("   Current registry traversal:")
+    print("   ", end="")
+    registry.traverse()
+
+    search_target = "Customer #2 - Bob"
+    print(f"\n4. Searching for '{search_target}':")
+    found_node = registry.search(search_target)
+    if found_node:
+        print(f"   Found node: {found_node}")
+
+    print("\n5. Removing a customer:")
+    remove_target = "Customer #1 - Alice"
+    if registry.remove(remove_target):
+        print(f"   [OK] Removed: {remove_target}")
+
+    print("\n6. Final registry state:")
+    print("   ", end="")
+    registry.traverse()
+
+    print("\n" + "=" * 60)

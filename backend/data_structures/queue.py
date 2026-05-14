@@ -1,34 +1,34 @@
 # backend/data_structures/queue.py
 # Queue implementation following FIFO (First In, First Out) discipline.
 #
-# Estructura:  Estructura lineal restringida; los elementos entran por atras y salen por delante.
-# Uso:         Gestion de la fila de espera de clientes.
-# Comportamiento: Los clientes son atendidos exactamente en el orden en que llegan.
-#                Enqueue agrega un cliente al final; dequeue atiende al cliente del frente.
+# Structure: Restricted linear structure; elements enter from the rear and leave from the front.
+# Use Case: Managing the customer waiting line.
+# Behavior: Customers are attended in the exact order of their arrival.
+#           Enqueue adds a customer to the rear; dequeue attends to the customer at the front.
 
 
 class Queue:
     """
-    Implementacion personalizada de una cola usando una lista de Python.
+    Custom queue implementation managing a sequential FIFO collection.
 
-    Caso de uso: almacenar clientes en espera para atenderlos en orden FIFO.
+    Use Case: Store waiting customers to attend to them in FIFO order.
     """
 
     def __init__(self):
-        """Inicializa una cola vacia."""
+        """Initializes an empty queue."""
         self.items = []
         self.front = 0
         self.rear = -1
 
     def enqueue(self, item):
         """
-        Agrega un elemento al final de la cola.
+        Adds an element to the rear of the queue.
 
         Args:
-            item: Elemento que se desea agregar.
+            item: The element to be added to the queue.
 
         Returns:
-            bool: True si el elemento se agrega correctamente.
+            bool: True if the element was added successfully.
         """
         if item is None:
             raise ValueError("Cannot enqueue None into the queue")
@@ -39,10 +39,13 @@ class Queue:
 
     def dequeue(self):
         """
-        Elimina y retorna el elemento que esta al frente de la cola.
+        Removes and returns the element at the front of the queue.
 
         Returns:
-            El elemento que ha esperado por mas tiempo.
+            The element that has been waiting the longest.
+
+        Raises:
+            IndexError: If the queue is empty.
         """
         if self.is_empty():
             raise IndexError("Cannot dequeue from an empty queue")
@@ -56,10 +59,13 @@ class Queue:
 
     def peek(self):
         """
-        Retorna el elemento del frente sin eliminarlo.
+        Returns the front element without removing it.
 
         Returns:
-            El siguiente elemento que saldra de la cola.
+            The next element to be dequeued.
+
+        Raises:
+            IndexError: If the queue is empty.
         """
         if self.is_empty():
             raise IndexError("Cannot peek into an empty queue")
@@ -68,25 +74,25 @@ class Queue:
 
     def is_empty(self):
         """
-        Verifica si la cola contiene elementos.
+        Checks if the queue contains any elements.
 
         Returns:
-            bool: True si la cola esta vacia.
+            bool: True if the queue is empty, False otherwise.
         """
         return len(self.items) == 0
 
     def size(self):
         """
-        Obtiene la cantidad de elementos almacenados en la cola.
+        Gets the total number of elements currently in the queue.
 
         Returns:
-            int: Tamano actual de la cola.
+            int: Current size of the queue.
         """
         return len(self.items)
 
     def display(self):
         """
-        Imprime todos los elementos de la cola desde el frente hasta el final.
+        Prints all elements in the queue from front to rear.
         """
         if self.is_empty():
             print("Queue is empty.")
@@ -103,6 +109,7 @@ class Queue:
 
 
 if __name__ == "__main__":
+    # Usage example: Customer Waiting Line
     print("=" * 60)
     print("QUEUE - CUSTOMER WAITING LINE EXAMPLE")
     print("=" * 60)

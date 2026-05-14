@@ -1,34 +1,34 @@
 # backend/data_structures/stack.py
 # Stack implementation following LIFO (Last In, First Out) discipline.
 #
-# Estructura:  Estructura lineal restringida; el acceso se limita solo al elemento superior.
-# Uso:         Seguimiento de ventas canceladas y devoluciones.
-# Comportamiento: La cancelacion mas reciente se procesa primero.
-#                Push agrega una cancelacion; pop recupera y elimina la mas reciente.
+# Structure: Restricted linear structure; access is strictly limited to the top element.
+# Use Case: Tracking canceled sales and returns.
+# Behavior: The most recent cancellation is always processed first.
+#           Push adds a cancellation; pop retrieves and removes the most recent one.
 
 
 class Stack:
     """
-    Implementacion personalizada de una pila usando una lista de Python.
+    Custom stack implementation managing a sequential LIFO collection.
 
-    Caso de uso: almacenar ventas canceladas y devoluciones para
-    procesar primero la accion mas reciente.
+    Use Case: Store canceled sales and returns to process the most
+    recent reversal action first.
     """
 
     def __init__(self):
-        """Inicializa una pila vacia."""
+        """Initializes an empty stack."""
         self.items = []
         self.top = -1
 
     def push(self, item):
         """
-        Agrega un elemento en la parte superior de la pila.
+        Adds an item to the top of the stack.
 
         Args:
-            item: Elemento que se desea agregar.
+            item: The element to be added to the stack.
 
         Returns:
-            bool: True si el elemento se almacena correctamente.
+            bool: True if the item was added successfully.
         """
         if item is None:
             raise ValueError("Cannot push None onto the stack")
@@ -39,10 +39,13 @@ class Stack:
 
     def pop(self):
         """
-        Elimina y retorna el elemento que esta en la cima de la pila.
+        Removes and returns the item at the top of the stack.
 
         Returns:
-            El elemento agregado mas recientemente.
+            The most recently pushed element.
+
+        Raises:
+            IndexError: If the stack is empty.
         """
         if self.is_empty():
             raise IndexError("Cannot pop from an empty stack")
@@ -53,10 +56,13 @@ class Stack:
 
     def peek(self):
         """
-        Retorna el elemento superior sin eliminarlo.
+        Returns the top element without removing it.
 
         Returns:
-            El elemento que se encuentra actualmente en la cima.
+            The element currently at the top of the stack.
+
+        Raises:
+            IndexError: If the stack is empty.
         """
         if self.is_empty():
             raise IndexError("Cannot peek into an empty stack")
@@ -65,25 +71,25 @@ class Stack:
 
     def is_empty(self):
         """
-        Verifica si la pila contiene elementos.
+        Checks if the stack contains any elements.
 
         Returns:
-            bool: True si la pila esta vacia.
+            bool: True if the stack is empty, False otherwise.
         """
         return self.top == -1
 
     def size(self):
         """
-        Obtiene la cantidad de elementos almacenados en la pila.
+        Gets the total number of elements currently in the stack.
 
         Returns:
-            int: Tamano actual de la pila.
+            int: Current size of the stack.
         """
         return self.top + 1
 
     def display(self):
         """
-        Imprime el contenido de la pila desde la cima hasta la base.
+        Prints the contents of the stack from top to bottom.
         """
         if self.is_empty():
             print("Stack is empty.")
@@ -100,6 +106,7 @@ class Stack:
 
 
 if __name__ == "__main__":
+    # Usage example: Canceled Sales Tracking
     print("=" * 60)
     print("STACK - CANCELED SALES EXAMPLE")
     print("=" * 60)

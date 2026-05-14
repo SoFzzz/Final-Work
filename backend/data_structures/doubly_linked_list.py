@@ -1,33 +1,43 @@
 # backend/data_structures/doubly_linked_list.py
-# Implementación de lista doblemente enlazada usando nodos con punteros hacia adelante y hacia atrás.
+# Doubly linked list implementation using nodes with forward and backward pointers.
 #
-# Estructura: Cadena de nodos; cada nodo contiene datos, una referencia al siguiente y una al anterior.
-# Usado para: Seguimiento del historial de ventas.
-# Comportamiento: Soporta recorrido bidireccional — hacia adelante (más antiguo al más reciente) 
-#                 y hacia atrás (más reciente al más antiguo) a través del historial completo de ventas.
+# Structure: Chain of nodes; each node contains data, a reference to the next, and one to the previous.
+# Used for: Tracking sales history.
+# Behavior: Supports bidirectional traversal — forward (oldest to most recent)
+#           and backward (most recent to oldest) through the complete sales history.
+
 
 class DoubleNode:
-    """Nodo para la lista doblemente enlazada."""
+    """Node for the doubly linked list."""
     def __init__(self, data):
-        # Almacena los datos del nodo
+        # Stores the node data
         self.data = data
-        # Puntero al siguiente nodo
+        # Pointer to the next node
         self.next = None
-        # Puntero al nodo anterior
+        # Pointer to the previous node
         self.prev = None
 
+    def __str__(self):
+        return f"DoubleNode({self.data})"
+
+    def __repr__(self):
+        return f"DoubleNode(data={self.data!r})"
+
+
 class DoublyLinkedList:
-    """Implementación de la lista doblemente enlazada."""
+    """Implementation of the doubly linked list."""
     def __init__(self):
-        # Puntero a la cabeza de la lista
+        # Pointer to the head of the list
         self.head = None
-        # Puntero a la cola de la lista
+        # Pointer to the tail of the list
         self.tail = None
-        # Contador del tamaño de la lista
+        # Internal size counter
         self._size = 0
 
     def add_to_tail(self, data):
-        """Inserta un nuevo nodo al final (venta más reciente)."""
+        """Inserts a new node at the end (most recent sale)."""
+        if data is None:
+            raise ValueError("Cannot add None data to the list")
         new_node = DoubleNode(data)
         if self.head is None:
             self.head = new_node
@@ -39,7 +49,9 @@ class DoublyLinkedList:
         self._size += 1
 
     def add_to_head(self, data):
-        """Inserta un nuevo nodo al inicio."""
+        """Inserts a new node at the beginning."""
+        if data is None:
+            raise ValueError("Cannot add None data to the list")
         new_node = DoubleNode(data)
         if self.head is None:
             self.head = new_node
@@ -51,23 +63,23 @@ class DoublyLinkedList:
         self._size += 1
 
     def remove(self, data):
-        """Encuentra y elimina el nodo que contiene los datos dados, actualizando los punteros vecinos correctamente."""
+        """Finds and removes the node containing the given data, updating neighbor pointers correctly."""
         current = self.head
 
         while current is not None:
             if current.data == data:
                 if current.prev is not None:
-                    # El nodo no es la cabeza
+                    # The node is not the head
                     current.prev.next = current.next
                 else:
-                    # El nodo es la cabeza
+                    # The node is the head
                     self.head = current.next
 
                 if current.next is not None:
-                    # El nodo no es la cola
+                    # The node is not the tail
                     current.next.prev = current.prev
                 else:
-                    # El nodo es la cola
+                    # The node is the tail
                     self.tail = current.prev
 
                 self._size -= 1
@@ -75,31 +87,83 @@ class DoublyLinkedList:
             
             current = current.next
 
-        # El nodo no se encontró
+        # The node was not found
         return False
 
     def traverse_forward(self):
-        """Itera e imprime todos los nodos desde la cabeza hasta la cola."""
+        """Iterates and prints all nodes from head to tail."""
         current = self.head
         elements = []
         while current is not None:
             elements.append(str(current.data))
             current = current.next
-        print(" -> ".join(elements) if elements else "Lista vacía")
+        print(" -> ".join(elements) if elements else "Empty list")
 
     def traverse_backward(self):
-        """Itera e imprime todos los nodos desde la cola hasta la cabeza."""
+        """Iterates and prints all nodes from tail to head."""
         current = self.tail
         elements = []
         while current is not None:
             elements.append(str(current.data))
             current = current.prev
-        print(" -> ".join(elements) if elements else "Lista vacía")
+        print(" -> ".join(elements) if elements else "Empty list")
 
     def is_empty(self):
-        """Retorna True si la lista no tiene nodos."""
+        """Returns True if the list has no nodes."""
         return self.head is None
 
     def size(self):
-        """Retorna el número de nodos en la lista."""
+        """Returns the total number of nodes in the list."""
         return self._size
+
+    def __str__(self):
+        elements = []
+        current = self.head
+        while current is not None:
+            elements.append(repr(current.data))
+            current = current.next
+        return f"DoublyLinkedList([{', '.join(elements)}])"
+
+    def __repr__(self):
+        return f"DoublyLinkedList(size={self._size}, head={self.head}, tail={self.tail})"
+
+
+if __name__ == "__main__":
+    # Usage example: Sales History Tracking
+    print("=" * 60)
+    print("DOUBLY LINKED LIST - SALES HISTORY EXAMPLE")
+    print("=" * 60)
+
+    history = DoublyLinkedList()
+
+    sales = [
+        "Sale #1 - Book: 1984",
+        "Sale #2 - Book: The Great Gatsby",
+        "Sale #3 - Book: To Kill a Mockingbird"
+    ]
+
+    print("\n1. Adding completed sales to history (tail):")
+    for sale in sales:
+        history.add_to_tail(sale)
+        print(f"   [OK] Recorded: {sale}")
+
+    print(f"\n2. Total records in history: {history.size()}")
+    
+    print("\n3. Forward Traversal (Chronological: Oldest to Newest):")
+    print("   ", end="")
+    history.traverse_forward()
+
+    print("\n4. Backward Traversal (Reverse Chronological: Newest to Oldest):")
+    print("   ", end="")
+    history.traverse_backward()
+
+    print("\n5. Removing a sale record from history:")
+    remove_target = "Sale #2 - Book: The Great Gatsby"
+    if history.remove(remove_target):
+        print(f"   [OK] Removed: {remove_target}")
+
+    print("\n6. History state after removal (Forward Traversal):")
+    print("   ", end="")
+    history.traverse_forward()
+
+    print("\n" + "=" * 60)
