@@ -1,31 +1,88 @@
 # backend/data_structures/singly_linked_list.py
-# Singly linked list implementation using nodes with a single forward pointer.
+# Implementación de lista enlazada simple usando nodos con un solo puntero hacia adelante.
 #
-# Structure:   Chain of nodes; each node holds data and a reference to the next node.
-# Used for:    Dynamic customer registration.
-# Behavior:    Nodes are allocated on demand; traversal is unidirectional (head to tail).
-
+# Estructura: Cadena de nodos; cada nodo contiene datos y una referencia al siguiente nodo.
+# Usado para: Registro dinámico de clientes.
+# Comportamiento: Los nodos se asignan bajo demanda; el recorrido es unidireccional (de cabeza a cola).
 
 class Node:
-    # TODO: Implement __init__(data) — store data and set next pointer to None
-    pass
-
+    """Nodo para la lista enlazada simple."""
+    def __init__(self, data):
+        # Almacena los datos del nodo
+        self.data = data
+        # Puntero al siguiente nodo, inicialmente nulo
+        self.next = None
 
 class SinglyLinkedList:
-    # TODO: Implement __init__ — initialize head pointer and size counter
+    """Implementación de la lista enlazada simple."""
+    def __init__(self):
+        # Puntero a la cabeza de la lista
+        self.head = None
+        # Contador del tamaño de la lista
+        self._size = 0
 
-    # TODO: Implement add_to_head(data) — insert a new node at the beginning of the list
+    def add_to_head(self, data):
+        """Inserta un nuevo nodo al inicio de la lista."""
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        self._size += 1
 
-    # TODO: Implement add_to_tail(data) — insert a new node at the end of the list
+    def add_to_tail(self, data):
+        """Inserta un nuevo nodo al final de la lista."""
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next is not None:
+                current = current.next
+            current.next = new_node
+        self._size += 1
 
-    # TODO: Implement remove(data) — find and remove the node containing the given data
+    def remove(self, data):
+        """Encuentra y elimina el nodo que contiene los datos dados."""
+        current = self.head
+        previous = None
 
-    # TODO: Implement search(data) — return the node containing the given data, or None
+        while current is not None:
+            if current.data == data:
+                if previous is None:
+                    # El nodo a eliminar es la cabeza
+                    self.head = current.next
+                else:
+                    # El nodo a eliminar está en el medio o al final
+                    previous.next = current.next
+                self._size -= 1
+                return True
+            previous = current
+            current = current.next
+        
+        # El nodo no se encontró
+        return False
 
-    # TODO: Implement traverse() — iterate and print all nodes from head to tail
+    def search(self, data):
+        """Retorna el nodo que contiene los datos dados, o None si no existe."""
+        current = self.head
+        while current is not None:
+            if current.data == data:
+                return current
+            current = current.next
+        return None
 
-    # TODO: Implement is_empty() — return True if the list has no nodes
+    def traverse(self):
+        """Itera e imprime todos los nodos desde la cabeza hasta la cola."""
+        current = self.head
+        elements = []
+        while current is not None:
+            elements.append(str(current.data))
+            current = current.next
+        print(" -> ".join(elements) if elements else "Lista vacía")
 
-    # TODO: Implement size() — return the number of nodes in the list
+    def is_empty(self):
+        """Retorna True si la lista no tiene nodos."""
+        return self.head is None
 
-    pass
+    def size(self):
+        """Retorna el número de nodos en la lista."""
+        return self._size
