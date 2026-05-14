@@ -44,6 +44,9 @@ class CircularSinglyLinkedList:
                 tail = tail.next
             tail.next = new_node
             new_node.next = self.head          # restore circular link
+            # Only reset current when it hasn't been set yet
+            if self.current is None:
+                self.current = self.head
         self._size += 1
 
     def get_next(self):
