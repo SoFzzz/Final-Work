@@ -100,13 +100,18 @@ class DoublyLinkedList:
         print(" -> ".join(elements) if elements else "Empty list")
 
     def traverse_backward(self):
-        """Iterates and prints all nodes from tail to head."""
+        """Iterates and prints all nodes from tail to head.
+        Correctly handles lists with a single element (tail.prev is None).
+        """
+        if self.is_empty():
+            print("Empty list")
+            return
         current = self.tail
         elements = []
         while current is not None:
             elements.append(str(current.data))
             current = current.prev
-        print(" -> ".join(elements) if elements else "Empty list")
+        print(" -> ".join(elements))
 
     def is_empty(self):
         """Returns True if the list has no nodes."""
