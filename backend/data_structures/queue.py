@@ -40,15 +40,14 @@ class Queue:
     def dequeue(self):
         """
         Removes and returns the element at the front of the queue.
+        Returns None if the queue is empty instead of raising an exception,
+        preventing crashes when the customer waiting line is empty.
 
         Returns:
-            The element that has been waiting the longest.
-
-        Raises:
-            IndexError: If the queue is empty.
+            The element that has been waiting the longest, or None if empty.
         """
         if self.is_empty():
-            raise IndexError("Cannot dequeue from an empty queue")
+            return None
 
         item = self.items.pop(0)
         self.rear -= 1
@@ -60,15 +59,13 @@ class Queue:
     def peek(self):
         """
         Returns the front element without removing it.
+        Returns None if the queue is empty.
 
         Returns:
-            The next element to be dequeued.
-
-        Raises:
-            IndexError: If the queue is empty.
+            The next element to be dequeued, or None if empty.
         """
         if self.is_empty():
-            raise IndexError("Cannot peek into an empty queue")
+            return None
 
         return self.items[self.front]
 
