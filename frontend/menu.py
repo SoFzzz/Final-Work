@@ -124,20 +124,15 @@ class Menu:
                 self._print_header("Add Customer to Queue")
                 try:
                     cust_id = int(self._get_input("  Customer ID to enqueue: "))
-                    node = self.system.customer_registry.search(cust_id)
-                    if node:
-                        # search() returns a Node; compare by customer_id
-                        found = None
-                        current = self.system.customer_registry.head
-                        while current:
-                            if current.data.customer_id == cust_id:
-                                found = current.data
-                                break
-                            current = current.next
-                        if found:
-                            self.system.add_customer_to_queue(found)
-                        else:
-                            print(f"  [!] Customer ID {cust_id} not found in registry.")
+                    found = None
+                    current = self.system.customer_registry.head
+                    while current:
+                        if current.data.customer_id == cust_id:
+                            found = current.data
+                            break
+                        current = current.next
+                    if found:
+                        self.system.add_customer_to_queue(found)
                     else:
                         print(f"  [!] Customer ID {cust_id} not found in registry.")
                 except ValueError:
