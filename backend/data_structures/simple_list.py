@@ -88,6 +88,23 @@ class SimpleList:
         self.items[index] = new_item
         return True
     
+    def get(self, index):
+        """
+        Retrieve an item at a specific index.
+        
+        Args:
+            index: The index of the item to retrieve
+            
+        Returns:
+            The item at the specified index
+            
+        Raises:
+            IndexError: If the index is out of range
+        """
+        if index < 0 or index >= len(self.items):
+            raise IndexError(f"Index {index} is out of range")
+        return self.items[index]
+
     def get_all(self):
         """
         Get all items in the list.
@@ -96,6 +113,16 @@ class SimpleList:
             list: A copy of all items in the list
         """
         return self.items.copy()
+
+    def display(self):
+        """
+        Display all items in the list to the console.
+        """
+        if self.is_empty():
+            print("SimpleList is empty.")
+        else:
+            for idx, item in enumerate(self.items):
+                print(f"[{idx}] {item}")
     
     def is_empty(self):
         """
@@ -154,7 +181,7 @@ if __name__ == "__main__":
     print("\n1. Adding books to the catalog:")
     for book in books:
         catalog.add(book)
-        print(f"   ✓ Added: {book}")
+        print(f"   [OK] Added: {book}")
     
     # Display all books
     print(f"\n2. Total books in catalog: {catalog.size()}")
@@ -178,7 +205,7 @@ if __name__ == "__main__":
     print("\n5. Removing a book:")
     removed_book = "Pride and Prejudice - Jane Austen"
     if catalog.remove(removed_book):
-        print(f"   ✓ Removed: {removed_book}")
+        print(f"   [OK] Removed: {removed_book}")
     
     # Check if empty
     print(f"\n6. Is catalog empty? {catalog.is_empty()}")

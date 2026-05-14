@@ -11,12 +11,13 @@ class DoubleList:
     A managed custom double list implementation for storing paired data.
     
     Use Case: Store normal prices and discounted prices for books.
-    Internally uses tuples to manage paired information.
+    Internally uses two synchronized arrays to manage paired information.
     """
     
     def __init__(self):
-        """Initialize an empty double list."""
-        self.pairs = []
+        """Initialize an empty double list with two synchronized internal arrays."""
+        self.first_list = []
+        self.second_list = []
     
     def add(self, first_value, second_value):
         """
@@ -35,10 +36,16 @@ class DoubleList:
         if first_value is None or second_value is None:
             raise ValueError("Cannot add None values to the double list")
         
-        # Create a tuple pair and add to list
-        pair = (first_value, second_value)
-        self.pairs.append(pair)
+        self.first_list.append(first_value)
+        self.second_list.append(second_value)
         return True
+
+    def add_pair(self, first_value, second_value):
+        """
+        Add a pair of values to the double list.
+        Alias for add() to fulfill Phase 3 specifications.
+        """
+        return self.add(first_value, second_value)
     
     def remove(self, index):
         """
@@ -53,10 +60,11 @@ class DoubleList:
         Raises:
             IndexError: If the index is out of range
         """
-        if index < 0 or index >= len(self.pairs):
+        if index < 0 or index >= len(self.first_list):
             raise IndexError(f"Index {index} is out of range")
         
-        self.pairs.pop(index)
+        self.first_list.pop(index)
+        self.second_list.pop(index)
         return True
     
     def update(self, index, first_value, second_value):
@@ -78,10 +86,27 @@ class DoubleList:
         if first_value is None or second_value is None:
             raise ValueError("Cannot set values to None")
         
-        if index < 0 or index >= len(self.pairs):
+        if index < 0 or index >= len(self.first_list):
             raise IndexError(f"Index {index} is out of range")
         
-        self.pairs[index] = (first_value, second_value)
+        self.first_list[index] = first_value
+        self.second_list[index] = second_value
+        return True
+
+    def update_discount(self, index, new_discount):
+        """
+        Update the discount value for a specific pair at a given index.
+        Fulfills Phase 3 specifications.
+        """
+        if index < 0 or index >= len(self.second_list):
+            raise IndexError(f"Index {index} is out of range")
+        
+        # If the second list stores a tuple like (normal, discount), update the discount part
+        if isinstance(self.second_list[index], tuple) and len(self.second_list[index]) == 2:
+            normal = self.second_list[index][0]
+            self.second_list[index] = (normal, new_discount)
+        else:
+            self.second_list[index] = new_discount
         return True
     
     def search(self, first_value):
@@ -95,11 +120,9 @@ class DoubleList:
             list: A list of indices where the first value is found
         """
         indices = []
-        
-        for index, pair in enumerate(self.pairs):
-            if pair[0] == first_value:
+        for index, val in enumerate(self.first_list):
+            if val == first_value:
                 indices.append(index)
-        
         return indices
     
     def get_all(self):
@@ -109,7 +132,7 @@ class DoubleList:
         Returns:
             list: A copy of all pairs as tuples
         """
-        return self.pairs.copy()
+        return [(self.first_list[i], self.second_list[i]) for i in range(len(self.first_list))]
     
     def is_empty(self):
         """
@@ -118,7 +141,7 @@ class DoubleList:
         Returns:
             bool: True if the list is empty, False otherwise
         """
-        return len(self.pairs) == 0
+        return len(self.first_list) == 0
     
     def size(self):
         """
@@ -127,7 +150,7 @@ class DoubleList:
         Returns:
             int: The number of pairs currently in the list
         """
-        return len(self.pairs)
+        return len(self.first_list)
     
     def get_pair(self, index):
         """
@@ -142,10 +165,10 @@ class DoubleList:
         Raises:
             IndexError: If the index is out of range
         """
-        if index < 0 or index >= len(self.pairs):
+        if index < 0 or index >= len(self.first_list):
             raise IndexError(f"Index {index} is out of range")
         
-        return self.pairs[index]
+        return (self.first_list[index], self.second_list[index])
     
     def get_first_values(self):
         """
@@ -154,7 +177,7 @@ class DoubleList:
         Returns:
             list: A list of all first values
         """
-        return [pair[0] for pair in self.pairs]
+        return self.first_list.copy()
     
     def get_second_values(self):
         """
@@ -163,7 +186,21 @@ class DoubleList:
         Returns:
             list: A list of all second values
         """
-        return [pair[1] for pair in self.pairs]
+        return self.second_list.copy()
+
+    def display_both(self):
+        """
+        Display both synchronized lists side-by-side.
+        Fulfills Phase 3 specifications.
+        """
+        if self.is_empty():
+            print("DoubleList is empty.")
+            return
+        
+        print(f"{'Index':<8} | {'First List':<25} | {'Second List':<25}")
+        print("-" * 65)
+        for i in range(self.size()):
+            print(f"[{i}]{'':<5} | {str(self.first_list[i]):<25} | {str(self.second_list[i]):<25}")
     
     def __str__(self):
         """
@@ -172,7 +209,7 @@ class DoubleList:
         Returns:
             str: A readable string representation of the double list
         """
-        return f"DoubleList({self.pairs})"
+        return f"DoubleList(first_list={self.first_list}, second_list={self.second_list})"
     
     def __repr__(self):
         """
@@ -181,7 +218,7 @@ class DoubleList:
         Returns:
             str: A detailed representation of the double list
         """
-        return f"DoubleList(size={self.size()}, pairs={self.pairs})"
+        return f"DoubleList(size={self.size()}, first_list={self.first_list}, second_list={self.second_list})"
 
 
 if __name__ == "__main__":
@@ -203,14 +240,15 @@ if __name__ == "__main__":
     
     print("\n1. Adding book prices (normal and discounted):")
     for book_name, (normal, discount) in books_prices:
-        prices.add(book_name, (normal, discount))
-        print(f"   ✓ {book_name}: Normal=${normal}, Discount=${discount}")
+        prices.add_pair(book_name, (normal, discount))
+        print(f"   [OK] {book_name}: Normal=${normal}, Discount=${discount}")
     
     # Display all prices
     print(f"\n2. Total books in price list: {prices.size()}")
     print("   All book prices:")
     for idx, pair in enumerate(prices.get_all()):
-        book, (normal, discount) in (pair[0], pair[1])
+        book = pair[0]
+        normal, discount = pair[1]
         print(f"   [{idx}] {book}: Normal=${normal}, Discount=${discount}")
     
     # Search for a book price
@@ -227,11 +265,16 @@ if __name__ == "__main__":
     print(f"   Before: {prices.get_pair(0)}")
     prices.update(0, "The Great Gatsby", (15.99, 11.99))
     print(f"   After:  {prices.get_pair(0)}")
+
+    # Update discount specifically using update_discount
+    print("\n4.b Updating discount specifically:")
+    prices.update_discount(0, 10.99)
+    print(f"   After update_discount: {prices.get_pair(0)}")
     
     # Remove a price entry
     print("\n5. Removing a book price entry:")
     if prices.remove(2):
-        print(f"   ✓ Removed price entry at index 2")
+        print(f"   [OK] Removed price entry at index 2")
     
     # Check if empty
     print(f"\n6. Is price list empty? {prices.is_empty()}")
@@ -242,10 +285,8 @@ if __name__ == "__main__":
     print(f"   All first values: {prices.get_first_values()}")
     print(f"   All second values: {prices.get_second_values()}")
     
-    # Display final state
-    print("\n8. Final price list state:")
-    for idx, pair in enumerate(prices.get_all()):
-        book, (normal, discount) = pair[0], pair[1]
-        print(f"   [{idx}] {book}: Normal=${normal}, Discount=${discount}")
+    # Display final state using display_both()
+    print("\n8. Final price list state (display_both):")
+    prices.display_both()
     
     print("\n" + "=" * 60)
