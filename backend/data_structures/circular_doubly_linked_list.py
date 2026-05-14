@@ -9,27 +9,74 @@
 
 
 class CircularDoubleNode:
-    # TODO: Implement __init__(data) — store data, set next to None, set prev to None
-    pass
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
 
 
 class CircularDoublyLinkedList:
-    # TODO: Implement __init__ — initialize head pointer, current pointer, and size counter
+    def __init__(self):
+        self.head = None
+        self.current = None
+        self._size = 0
 
-    # TODO: Implement add(data) — insert a new node and update all four circular pointers:
-    #       new_node.next -> head, head.prev -> new_node,
-    #       previous_tail.next -> new_node, new_node.prev -> previous_tail
+    def is_empty(self):
+        """Return True if the list has no nodes."""
+        return self._size == 0
 
-    # TODO: Implement navigate_forward() — advance current to current.next and return its data
+    def size(self):
+        """Return the total number of nodes in the list."""
+        return self._size
 
-    # TODO: Implement navigate_backward() — move current to current.prev and return its data
+    def add(self, data):
+        """Insert a new node and update all four circular pointers:
+        new_node.next -> head, head.prev -> new_node,
+        previous_tail.next -> new_node, new_node.prev -> previous_tail.
+        """
+        new_node = CircularDoubleNode(data)
+        if self.is_empty():
+            self.head = new_node
+            new_node.next = self.head
+            new_node.prev = self.head
+            self.current = self.head
+        else:
+            tail = self.head.prev          # the current last node
+            tail.next = new_node
+            new_node.prev = tail
+            new_node.next = self.head
+            self.head.prev = new_node
+        self._size += 1
 
-    # TODO: Implement display_current() — print the data stored in the current node
+    def navigate_forward(self):
+        """Advance current to current.next and return its data."""
+        if self.is_empty():
+            return None
+        self.current = self.current.next
+        return self.current.data
 
-    # TODO: Implement display() — print all nodes starting from head, stopping after one full loop
+    def navigate_backward(self):
+        """Move current to current.prev and return its data."""
+        if self.is_empty():
+            return None
+        self.current = self.current.prev
+        return self.current.data
 
-    # TODO: Implement is_empty() — return True if the list has no nodes
+    def display_current(self):
+        """Print the data stored in the current node."""
+        if self.is_empty():
+            print("  (no promotions available)")
+        else:
+            print(f"  Current promotion: {self.current.data}")
 
-    # TODO: Implement size() — return the total number of nodes in the list
-
-    pass
+    def display(self):
+        """Print all nodes starting from head, stopping after one full loop."""
+        if self.is_empty():
+            print("  (no promotions registered)")
+            return
+        node = self.head
+        items = []
+        for _ in range(self._size):
+            items.append(str(node.data))
+            node = node.next
+        print(" <-> ".join(items) + " <-> [circular]")
