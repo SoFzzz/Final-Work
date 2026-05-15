@@ -53,7 +53,7 @@ The project evaluates the team's ability to:
 
 ## 🏛️ System Description
 
-The Library Management System allows users to interact through a **console menu interface**. The system supports the following core operations:
+The Library Management System allows users to interact through a **modern Tkinter Graphical User Interface (GUI)**. The system supports the following core operations:
 
 ### 📖 Book Management
 - Register new books into the catalog
@@ -224,7 +224,7 @@ library_system/
 ├── main.py                          ← Application entry point
 │
 ├── frontend/
-│   └── menu.py                      ← Console menu interface and user interaction
+│   └── menu.py                      ← Tkinter GUI dashboard and user interaction
 │
 ├── backend/
 │   ├── models.py                    ← Domain model classes (Book, Customer, Seller, Sale)
@@ -245,7 +245,7 @@ library_system/
 | Layer | Location | Responsibility |
 |-------|----------|----------------|
 | Entry Point | `main.py` | Launches the application |
-| Interface | `frontend/menu.py` | Handles all user input and console output |
+| Interface | `frontend/menu.py` | Handles all GUI interactions and Tkinter visual components |
 | Business Logic | `backend/library_system.py` | Coordinates operations between models and structures |
 | Domain Models | `backend/models.py` | Defines the Book, Customer, Seller, and Sale entities |
 | Data Structures | `backend/data_structures/` | Self-contained, independently implemented structures |
@@ -263,7 +263,7 @@ library_system/
 | Web technologies | ❌ Not allowed |
 | OOP required | ✅ Mandatory |
 | Manual data structure implementation | ✅ Mandatory |
-| Console interface | ✅ Required |
+| Graphical User Interface (GUI) | ✅ Required |
 | Modular code organization | ✅ Required |
 
 ### Running the Project
@@ -462,17 +462,17 @@ feat: add seller rotation and promotion navigation to LibrarySystem
 
 ---
 
-### Phase 8 — Console Menu Interface
+### Phase 8 — Graphical User Interface (GUI)
 
-**Objective:** Build the complete user-facing console interface that allows human interaction with the system.
+**Objective:** Build the complete user-facing Tkinter interface that allows human interaction with the system.
 
 **Responsibilities:**
-- Create `ConsoleMenu` class (or equivalent functions) in `frontend/menu.py`
-- Implement the main menu with numbered options
-- Implement sub-menus for each module: Books, Customers, Sellers, Sales, Returns, Promotions
-- Handle user input validation and display informative error messages
-- Format output cleanly with separators and headers
-- Connect all menu actions to `LibrarySystem` methods
+- Create `BookstoreDashboard` class in `frontend/menu.py`
+- Implement the main layout using a tabbed `Notebook`
+- Implement dedicated visual tabs for each module: Books, Customers, Sellers, Sales, Returns, Promotions
+- Handle user input validation through dialog forms and display visual error messages (`messagebox`)
+- Render data collections cleanly in scrollable `Listbox` components
+- Connect all visual events to `LibrarySystem` methods
 
 **Involved Components:** `frontend/menu.py`, `backend/library_system.py`
 
@@ -636,7 +636,7 @@ cd library_system
 python main.py
 ```
 
-The application will display a welcome screen and a main menu in the console. From there, all system features are accessible through numbered menu options.
+The application will launch a graphical dashboard interface. From there, all system features are accessible through intuitive interactive tabs.
 
 ---
 
@@ -651,4 +651,4 @@ Every structure was chosen based on the specific operational requirements of the
 ---
 
 *Library Management System — Data Structures Final Project*
-*Pure Python · Object-Oriented Programming · Console Application*
+*Pure Python · Object-Oriented Programming · Desktop GUI Application*
