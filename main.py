@@ -3,7 +3,7 @@
 # Initializes and launches the console-based application.
 
 from backend.library_system import LibrarySystem
-from frontend.menu import Menu
+from frontend.menu import BookstoreDashboard
 
 
 def _print_welcome():
@@ -26,8 +26,8 @@ def main():
     _print_welcome()
     try:
         system = LibrarySystem()
-        menu   = Menu(system)
-        menu.run()
+        dashboard = BookstoreDashboard(system)
+        dashboard.run()
     except KeyboardInterrupt:
         print("\n\n  [!] Application interrupted. Goodbye!\n")
     except Exception as e:
